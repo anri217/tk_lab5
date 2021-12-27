@@ -140,6 +140,7 @@ def generate_bitmasks(r, m):
         mask = format(i, 'b')
         while len(mask) < m:
             mask = '0' + mask
+        mask = list(map(int, mask))
         true_count = 0
         for j in range(len(mask)):
             true_count = true_count + int(mask[j])
@@ -174,14 +175,13 @@ def base_function(I, word):
 
 def conv_func(i, x_arr):
     arr = []
-    for k in range(len(x_arr)):
-        curr = list(map(str, list(map(lambda x: base_function(i, x), x_arr))))
-        arr.append(["".join(curr[::-1]), i])
+    curr = list(map(str, list(map(lambda x: base_function(i, x), x_arr))))
+    arr.append([''.join(curr[::-1]), i])
     return arr
 
 
 def compare(x, y):
-    return int(y[0] < x[0]) - int(x[0] - y[0])
+    return int(y[0] < x[0]) - int(x[0] < y[0])
 
 
 def I_ordered_by_RM(r, m):
@@ -192,7 +192,7 @@ def I_ordered_by_RM(r, m):
     for x in i_arr:
         curr = list(map(lambda i: conv_func(i, x_arr), x))
         curr_1 = sorted(np.copy(curr), key=cmp_to_key(compare))
-        curr_2 = map(lambda l: "".join(l[1]), curr_1)
+        curr_2 = list(map(lambda l: ''.join(map(str,l[1])), curr_1))
         res.append(curr_2)
 
     return res
@@ -255,7 +255,7 @@ def decoding(word, r, m):
                 for k in range(len(inverse_words_len_m)):
                     new_arr_elem.append(base_function(I, inverse_words_len_m[k]))
                 arr.append(new_arr_elem)
-                res.append(I)
+                res.append(''.join(map(str, I)))
 
         for j in range(len(arr)):
             for k in range(len(word_copy)):
